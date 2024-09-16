@@ -31,9 +31,9 @@ set $menu dmenu_path | wmenu | xargs swaymsg exec --
 #
 # Example configuration:
 #
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+# exec swayidle -w \\
+#          timeout 300 'swaylock -f -c 000000' \\
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \\
 #          before-sleep 'swaylock -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
@@ -156,7 +156,7 @@ set $menu dmenu_path | wmenu | xargs swaymsg exec --
 #
 # Resizing containers:
 #
-mode "resize" {
+mode "󰳂 resize" {
     # left will shrink the containers width
     # right will grow the containers width
     # up will shrink the containers height
@@ -176,7 +176,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $mod+r mode "󰳂 resize"
 
 
 include /etc/sway/config.d/*
@@ -202,7 +202,6 @@ bindsym $mod+Shift+r exec /home/taham/.config/sway/scripts/start-stop-recording.
 
 #for_window [app_id="network_connecting_terminal"] floating enable
 
-bindsym $mod+Shift+n exec /home/taham/.config/sway/scripts/rc-service-networking-restart.sh
 ## Process Monitor (task manager)
 
 bindsym $mod+Shift+p exec kitty --class=process_monitor_terminal -T "Connecting..." sh -c "btop"
@@ -235,7 +234,7 @@ client.unfocused $inactive-border $inactive-title #ffffff #484e50   $inactive-bo
 output * bg /home/taham/Pictures/Wallpaper/SnowycapsMilkyway.jpg fill
 
 ## For flameshot (more like to speed up GTK applications slowing excessively)
-# exec hash dbus-update-activation-environment 2>/dev/null && \
+# exec hash dbus-update-activation-environment 2>/dev/null && \\
      # dbus-update-activation-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
 ## Explicitly for flameshot
@@ -243,15 +242,40 @@ output * bg /home/taham/Pictures/Wallpaper/SnowycapsMilkyway.jpg fill
 
 
 ## Note: Give permission to shutdown or reboot computer without sudo
-mode "danger" {
-	
+
+#
+
+mode "⚠️danger" {
+    
     bindsym Escape mode "default"
 
     bindsym r exec reboot
     bindsym p exec poweroff
 }
 
-bindsym $mod+Shift+d mode "danger"
+bindsym $mod+Shift+d mode "⚠️danger"
+
+
+mode "󰥔 clock" {
+    bindsym Escape mode "default"
+
+    bindsym s exec /home/taham/.config/sway/scripts/toggle-stopwatch.sh
+    bindsym c exec /home/taham/.config/sway/scripts/clear-stopwatch.sh
+
+}
+
+bindsym $mod+c mode "󰥔 clock"
+
+mode "󱚾 network" {
+    bindsym Escape mode "default"
+
+    bindsym r exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli reconnect
+    bindsym d exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli disconnect
+
+    bindsym s exec /home/taham/.config/sway/scripts/rc-service-networking-restart.sh
+}
+
+bindsym $mod+Shift+n mode "󱚾 network" 
 
 ## Controls mouse with keyboard
 
@@ -296,7 +320,7 @@ bindsym $mod+Shift+d mode "danger"
 #
 # }
 
-mode "mouse" {
+mode " mouse" {
     set $slow 5
     set $average 15
     set $fast 45
@@ -307,8 +331,8 @@ mode "mouse" {
     ## Clicks
     bindsym u exec ydotool click 0x40
     bindsym --release u exec ydotool click 0x80
-    bindsym i exec ydotool click 0x40
-    bindsym --release i exec ydotool click 0x80
+    bindsym i exec ydotool click 0x41
+    bindsym --release i exec ydotool click 0x81
 
     ## Average speed movement
     bindsym h exec ydotool mousemove -x -$average  -y 0 
@@ -349,27 +373,28 @@ mode "mouse" {
    
 
 }
-bindsym $mod+m mode "mouse"
+bindsym $mod+m mode " mouse"
 
 # Bar
 bar {
-	swaybar_command swaybar 
+    swaybar_command swaybar 
 
     position top
-	status_padding 5
-	gaps 5
+    status_padding 5
+    gaps 5
 
     colors {
         statusline #e0c0ff
         background #080022cc
         inactive_workspace #00000000 #000000cc #5c5c5cff
         separator #aa55ff
-	active_workspace #00000000 #bb55ff66 #111111bb
-	focused_workspace #00000000 #bb55ff #000000cc
-	binding_mode #6666ff #6666ff #000000cc
+        active_workspace #00000000 #bb55ff66 #111111bb
+        focused_workspace #00000000 #bb55ff #000000cc
+        binding_mode #080022cc #080022cc #bb77ff
+        # binding_mode #6666ff #6666ff #000000cc
     }
 
-	tray_bindsym button1 Activate
+    tray_bindsym button1 Activate
 
     status_command /home/taham/.config/sway/scripts/status.sh
 
@@ -384,6 +409,8 @@ bindsym $mod+n exec swaync-client -t -sw
 # Keyboard layouts
 
 input "type:keyboard" {
-	xkb_layout us,ara-custom
-	xkb_options lv3:caps_switch,grp:rctrl_toggle
+    xkb_layout us,ara-custom
+    xkb_options lv3:caps_switch,grp:rctrl_toggle
 }
+
+

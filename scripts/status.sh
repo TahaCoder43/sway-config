@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 screenrecord_indicator="   "
 reconnect_indicator=" 󱛄 "
@@ -6,6 +6,24 @@ stopwatch_indicator="󱎫"
 stopwatch_paused_indicator="󱫪"
 start_seconds=0
 saved_seconds=0
+
+space() {
+    echo "    {                                 "
+    echo "       \"full_text\": \" \",          "
+    echo "       \"min_width\": $1              "
+    echo "    },                                "
+}
+
+prayer() {
+    { read prayer; read timing; read time_left; } < /home/taham/.config/sway/data/coming_prayer.txt
+    text="$prayer $timing: $time_left"
+
+    echo "    {                                 "
+    echo "       \"full_text\": \" $text \",      "
+    echo "       \"color\": \"#cc00ff\"         "
+    echo "    },                                "
+
+}
 
 stopwatch() {
     if [[ -e /tmp/stopwatch-ticking ]]; then 
@@ -64,22 +82,21 @@ isRecording() {
 formatDate() {
     date=$(date +'%b %d %Y | %X')
     echo "    {                            "
-    echo "       \"full_text\": \" $date \", "
-    echo "       \"align\": \"center\"     "
+    echo "       \"full_text\": \" $date \" "
     echo "    }                            "
 }
 
 echo '{"version": 1}\n'
 echo '['
-while : 
-do
+while true; do
     echo "["
     stopwatch
     isReconnecting
     isRecording
+    prayer
     formatDate
     echo "],"
-    sleep 0.5
-done
+    sleep 1
 
+done
 

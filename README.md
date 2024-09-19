@@ -12,6 +12,7 @@
 
 ## TODO sway
 
+- [] in full screen mode, window should change upon moving focus
 - [] add a prayer timing shower feature, and perhaps, and azaan givign feature
 - [] add alarm, timer, stopwatch e.t.c
 - [] add a note taking feature, like notes on what todo

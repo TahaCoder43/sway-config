@@ -61,7 +61,7 @@ set $menu dmenu_path | wmenu | xargs swaymsg exec --
     floating_modifier $mod normal
 
     # Reload the configuration file
-    bindsym $mod+Shift+c reload
+    bindsym $mod+Shift+c exec /home/taham/.config/sway/scripts/close-background-tasks.sh ; reload
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
@@ -192,58 +192,13 @@ bindsym $mod+u exec /home/taham/.config/sway/scripts/decrease_brightness.sh
 ## Screenshot Controls
 bindsym $mod+Shift+s exec $XDG_CONFIG_HOME/sway/scripts/area-screen-shot.sh
 bindsym $mod+Shift+w exec $XDG_CONFIG_HOME/sway/scripts/full-screen-shot.sh
-## Screenrecord Controls
 
+## Screenrecord Controls
 bindsym $mod+Shift+r exec /home/taham/.config/sway/scripts/start-stop-recording.sh
 
-## Connect to network
-
-#bindsym $mod+Shift+n exec kitty --class=network_connecting_terminal -T "Connecting..." sh -c "cat /home/taham/.sudo-pass | sudo -S -p \"\" -E env \"PATH=$PATH\" rc-service networking --quiet restart"
-
-#for_window [app_id="network_connecting_terminal"] floating enable
-
 ## Process Monitor (task manager)
-
 bindsym $mod+Shift+p exec kitty --class=process_monitor_terminal -T "Connecting..." sh -c "btop"
-
 for_window [app_id="process_monitor_terminal"] floating enable
-
-## Styling Windows
-
-default_border pixel 2
-default_floating_border pixel 2
-titlebar_border_thickness 0
-titlebar_padding 3
-
-gaps inner 5
-
-font pango:SpaceMono NerdFont 11
-
-set $active-border   #aa66ff
-set $inactive-border #111111
-set $active-title    #aa66ffbb
-set $inactive-title  #000000bb
-
-# Syntax
-#class           border           bg              text    indicator chlid_border
-client.focused   $active-border   $active-title   #000000 #2e9ef4   $active-border
-client.unfocused $inactive-border $inactive-title #ffffff #484e50   $inactive-border
-
-
-## wallpaper 
-output * bg /home/taham/Pictures/Wallpaper/SnowycapsMilkyway.jpg fill
-
-## For flameshot (more like to speed up GTK applications slowing excessively)
-# exec hash dbus-update-activation-environment 2>/dev/null && \\
-     # dbus-update-activation-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-
-## Explicitly for flameshot
-# for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
-
-
-## Note: Give permission to shutdown or reboot computer without sudo
-
-#
 
 mode "⚠️danger" {
     
@@ -276,6 +231,31 @@ mode "󱚾 network" {
 }
 
 bindsym $mod+Shift+n mode "󱚾 network" 
+
+## Styling Windows
+
+default_border pixel 2
+default_floating_border pixel 2
+titlebar_border_thickness 0
+titlebar_padding 3
+
+gaps inner 5
+
+font pango:SpaceMono NerdFont 11
+
+set $active-border   #aa66ff
+set $inactive-border #111111
+set $active-title    #aa66ffbb
+set $inactive-title  #000000bb
+
+# Syntax
+#class           border           bg              text    indicator chlid_border
+client.focused   $active-border   $active-title   #000000 #2e9ef4   $active-border
+client.unfocused $inactive-border $inactive-title #ffffff #484e50   $inactive-border
+
+
+## wallpaper 
+output * bg /home/taham/Pictures/Wallpaper/SnowycapsMilkyway.jpg fill
 
 ## Controls mouse with keyboard
 
@@ -374,6 +354,12 @@ mode " mouse" {
 
 }
 bindsym $mod+m mode " mouse"
+
+# Prayer scripts for bar
+
+exec_always /home/taham/.config/sway/scripts/update-prayer-data.sh &
+
+exec_always /home/taham/.config/sway/scripts/coming-prayer-event.py 2> /tmp/sway-error.log &
 
 # Bar
 bar {

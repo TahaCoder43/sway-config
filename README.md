@@ -4,16 +4,22 @@
 2. `git clone https://github.com/TahaCoder43/sway-config.git /home/[USERNAME]/.config/sway` (depends on your $XDG_CONFIG_HOME I think)
 3. Press Super+Shift+c (super is usually windows key)
 
+# Suggestions
+
+- add command mode and move not as used commands there, like add a gauth shower command, and a terminal password manager shower command, (maybe same as launcher mode)
+- open websites in webview, and this should be in launcher mode
+
 # Issues
 
 - [] IMPORTANT: Figure out this network connection issue, like it being really slow. See how you can reconnecct using wpasupplicant and how iwd works as an alternative
 - [] Mouse does not change style for some reason, fix that
-- [] solve the problem of not being able to shfit and resize and stuff
+- [] solve the problem of not being able to shfit and resize and stuff with mouse
+- [] in full screen mode, window should change upon moving focus
 
 ## TODO sway
 
-- [] in full screen mode, window should change upon moving focus
-- [] add a prayer timing shower feature, and perhaps, and azaan givign feature
+- [] add adhan givign feature
+- [] change 00 fix, to AM to PM fix for illogical 12pm problem
 - [] add alarm, timer, stopwatch e.t.c
 - [] add a note taking feature, like notes on what todo
 - [] Bindings to increase & decrease volume
@@ -43,11 +49,6 @@
 - [x] can take grimshots (screenshots)
 - [x] added scrolling capabilities in mouse mode (should work in horizontal :shrug:)
 
-### Suggestions
-- add command mode and move not as used commands there, like add a gauth shower command, and a terminal password manager shower command, (maybe same as launcher mode)
-- open websites in webview, and this should be in launcher mode
-
-
 ## TODO Bar
 
 - [] add a language indicator
@@ -55,6 +56,7 @@
 - [] add a clipboard (to tray or statusline) 
 - [] Add a drives icons to statusline or tray
 - [] Add a tray
+- [x] add a prayer time indicator
 - [x] styled swaybar with a cool purple theme
 - [x] added a recording indicator
 - [x] added a wifi reconnecting indicator

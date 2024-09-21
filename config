@@ -356,10 +356,12 @@ mode " mouse" {
 bindsym $mod+m mode " mouse"
 
 # Prayer scripts for bar
-
 exec_always /home/taham/.config/sway/scripts/update-prayer-data.sh &
 
 exec_always /home/taham/.config/sway/scripts/coming-prayer-event.py 2> /tmp/sway-error.log &
+
+# stop adhan
+bindsym $mod+p exec pkill -f ".*vlc \-I dummy.*sway/data/azan1.mp3"
 
 # Bar
 bar {

@@ -4,6 +4,8 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+exec_always mkdir /tmp/sway-log
+
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -69,10 +71,10 @@ set $menu dmenu_path | wmenu | xargs swaymsg exec --
 # Moving around:
 #
     # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
+    bindsym $mod+$left fullscreen disable; focus left
+    bindsym $mod+$down fullscreen disable; focus down
+    bindsym $mod+$up fullscreen disable; focus up
+    bindsym $mod+$right fullscreen disable; focus right
     # Or use $mod+[up|down|left|right]
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
@@ -173,8 +175,7 @@ mode "󰳂 resize" {
     bindsym Right resize grow width 10px
 
     # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "󰳂 resize"
 
@@ -184,6 +185,7 @@ include /etc/sway/config.d/*
 ## Custom config
 
 set $mod2 Mod1
+workspace number 4
 
 ## Brightness Controls
 bindsym $mod+i exec /home/taham/.config/sway/scripts/increase_brightness.sh
@@ -194,15 +196,31 @@ bindsym $mod+Shift+s exec $XDG_CONFIG_HOME/sway/scripts/area-screen-shot.sh
 bindsym $mod+Shift+w exec $XDG_CONFIG_HOME/sway/scripts/full-screen-shot.sh
 
 ## Screenrecord Controls
-bindsym $mod+Shift+r exec /home/taham/.config/sway/scripts/start-stop-recording.sh
+bindsym $mod+Shift+r exec /home/taham/.config/sway/scripts/start-stop-recording.sh 2> /tmp/sway-log/start-stop-recording.log
 
 ## Process Monitor (task manager)
-bindsym $mod+Shift+p exec kitty --class=process_monitor_terminal -T "Connecting..." sh -c "btop"
-for_window [app_id="process_monitor_terminal"] floating enable
+bindsym $mod+Shift+p exec foot --app-id="process_monitor_terminal" --title "Connecting..." sh -c "btop"
+for_window [app_id="process_monitor_terminal"] floating enable, sticky enable, resize set 1356px 708px, move position 0px 0px
+
+# Widgets
+
+## Sticky Notes
+
+exec foot --config="$XDG_CONFIG_HOME/foot/stickyfoot.ini" --app-id="stickynote-terminal" --title="Sticky Notes" /home/taham/Notes/Sticky/activate_notes.sh
+for_window [app_id="stickynote-terminal"] move window to workspace number 4, fullscreen enable
+
+mode "🚀launcher" {
+    bindsym $mod+$mod2+l mode "default"
+
+    # Rerun Notes
+    bindsym n exec foot --config="$XDG_CONFIG_HOME/foot/stickyfoot.ini" --app-id="stickynote-terminal" --title="Sticky Notes" /home/taham/Notes/Sticky/activate_notes.sh
+}
+
+bindsym $mod+$mod2+l mode "🚀launcher"
 
 mode "⚠️danger" {
     
-    bindsym Escape mode "default"
+    bindsym $mod+Shift+d mode "default"
 
     bindsym r exec reboot
     bindsym p exec poweroff
@@ -212,9 +230,9 @@ bindsym $mod+Shift+d mode "⚠️danger"
 
 
 mode "󰥔 clock" {
-    bindsym Escape mode "default"
+    bindsym $mod+c mode "default"
 
-    bindsym s exec /home/taham/.config/sway/scripts/toggle-stopwatch.sh
+    bindsym Space exec /home/taham/.config/sway/scripts/toggle-stopwatch.sh
     bindsym c exec /home/taham/.config/sway/scripts/clear-stopwatch.sh
 
 }
@@ -222,12 +240,12 @@ mode "󰥔 clock" {
 bindsym $mod+c mode "󰥔 clock"
 
 mode "󱚾 network" {
-    bindsym Escape mode "default"
+    bindsym $mod+Shift+n mode "default"
 
     bindsym r exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli reconnect
     bindsym d exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli disconnect
 
-    bindsym s exec /home/taham/.config/sway/scripts/rc-service-networking-restart.sh
+    bindsym s exec /home/taham/.config/sway/scripts/rc-service-networking-restart.sh 2> /tmp/sway-log/rc-service-networking-restart.log
 }
 
 bindsym $mod+Shift+n mode "󱚾 network" 
@@ -241,7 +259,7 @@ titlebar_padding 3
 
 gaps inner 5
 
-font pango:SpaceMono NerdFont 11
+font pango:Iosevka Nerd Font 11.5
 
 set $active-border   #aa66ff
 set $inactive-border #111111
@@ -306,13 +324,30 @@ mode " mouse" {
     set $fast 45
 
     ## IMPORTANT! Keybinding to escape mousemode
-    bindsym Escape mode "default"
+    bindsym $mod+m mode "default"
 
     ## Clicks
     bindsym u exec ydotool click 0x40
     bindsym --release u exec ydotool click 0x80
     bindsym i exec ydotool click 0x41
     bindsym --release i exec ydotool click 0x81
+    bindsym m exec ydotool click 0x42
+    bindsym --release m exec ydotool click 0x82
+
+
+    # This is neccesary or otherwise you can't shift click, cause on pressing shift you can't click
+    bindsym Shift+u exec ydotool click 0x40
+    bindsym --release Shift+u exec ydotool click 0x80
+    bindsym Ctrl+u exec ydotool click 0x40
+    bindsym --release Ctrl+u exec ydotool click 0x80
+    bindsym Shift+i exec ydotool click 0x41
+    bindsym --release Shift+i exec ydotool click 0x81
+    bindsym Ctrl+i exec ydotool click 0x41
+    bindsym --release Ctrl+i exec ydotool click 0x81
+    bindsym Shift+m exec ydotool click 0x42
+    bindsym --release Shift+m exec ydotool click 0x82
+    bindsym Ctrl+m exec ydotool click 0x42
+    bindsym --release Ctrl+m exec ydotool click 0x82
 
     ## Average speed movement
     bindsym h exec ydotool mousemove -x -$average  -y 0 
@@ -356,9 +391,13 @@ mode " mouse" {
 bindsym $mod+m mode " mouse"
 
 # Prayer scripts for bar
-exec_always /home/taham/.config/sway/scripts/update-prayer-data.sh &
+exec_always /home/taham/.config/sway/scripts/update-prayer-data.sh 2> /tmp/sway-log/update-prayer-data.log &
 
-exec_always /home/taham/.config/sway/scripts/coming-prayer-event.py 2> /tmp/sway-error.log &
+exec_always /home/taham/.config/sway/scripts/coming-prayer-event.py 2> /tmp/sway-log/coming-prayer-event.log &
+
+# Fasting script for bar
+exec_always /home/taham/.config/sway/scripts/update-fasting-status.sh 2> /tmp/sway-log/update-fasting-status.log &
+
 
 # stop adhan
 bindsym $mod+p exec pkill -f ".*vlc \-I dummy.*sway/data/azan1.mp3"

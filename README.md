@@ -14,11 +14,20 @@
 - [] IMPORTANT: Figure out this network connection issue, like it being really slow. See how you can reconnecct using wpasupplicant and how iwd works as an alternative
 - [] Mouse does not change style for some reason, fix that
 - [] solve the problem of not being able to shfit and resize and stuff with mouse
-- [] in full screen mode, window should change upon moving focus
 
 ## TODO sway
 
-- [] add adhan givign feature
+- [] maybe dedicate a workspace for a forever running btop
+- [] add KDE runner style runner, that has an option like KDE runner to run websites or query websites for example "{text} site:quran.com" or "quran.com/{surah}/{ayah}"
+- [] Set iosekya as the terminal font and cairo as the arabic font, and also check other arabic fonts
+- [] upload all the rest of your config files on github
+- [] add multiple notes using tmux
+- [] use window height and width from shell to set floating window size
+- [] add shadows -_-
+- [] add background blurrrrr ^<>^
+- [] add rofi
+- [] setup notes
+- [] add an option to view screen recording or screenshot taken
 - [] change 00 fix, to AM to PM fix for illogical 12pm problem
 - [] add alarm, timer, stopwatch e.t.c
 - [] add a note taking feature, like notes on what todo
@@ -34,6 +43,9 @@
 - [] add a workspace switching feature similar to what you had before
 - [] Add logout option to danger mode
 - [] maybe add marks
+- [x] Monday Thursday fasting reminder and status shower
+- [x] in full screen mode, window should change upon moving focus
+- [x] add adhan givign feature
 - [x] copies screenrecording to clipboard 
 - [x] setup notifications for network, screenshot taken 
 - [x] notifications are added
@@ -81,7 +93,14 @@
 - [x] Installed vlc
 
 ## Roadmap
-swaybar -> waybar|yambar -> eww|ags
+
+bring sway to your laptop harddrive
+
+add shadows, blurs, transitions to sway, if not possible look at swayfx|hyperland (migrating to hyperland means rewriting sway configuration)
+
+make a cool floating islands style topbar with help of waybar|yambar
+
+make a cool startup widget panel, (like the ones built with eww), and use it to switch to multiple profiles, one for work, one for entertainment, gaming e.t.c
 
 ## Extras
 

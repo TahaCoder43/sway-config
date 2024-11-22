@@ -79,8 +79,26 @@ isRecording() {
     fi
 }
 
+fastingStatus() {
+    text=""
+    if [[ -e /tmp/fast-tommorow ]]; then
+        text="Prepare for fast"
+    elif [[ -e /tmp/fast-today ]]; then
+        text="The Fast is about to begin"
+    elif [[ -e /tmp/fasting ]]; then
+        text="Fasting right now"
+    else
+        text="No fast"
+    fi
+        
+    echo "    {                                              "
+    echo "       \"full_text\": \" $text \",                 "
+    echo "       \"color\": \"#ffaa00\"                      "
+    echo "    },                                             "
+}
+
 formatDate() {
-    date=$(date +'%b %d %Y | %X')
+    date=$(date +'%a %d %b %Y | %I:%M:%S %p')
     echo "    {                            "
     echo "       \"full_text\": \" $date \" "
     echo "    }                            "
@@ -93,6 +111,7 @@ while true; do
     stopwatch
     isReconnecting
     isRecording
+    fastingStatus
     prayer
     formatDate
     echo "],"

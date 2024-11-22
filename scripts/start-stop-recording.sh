@@ -7,7 +7,7 @@ else
     folderpath=/home/taham/Videos/ScreenRecordings/$(date +%b-%g)/
     filepath=$folderpath/$(date +%d_%a_%H:%M:%S).mp4
     touch /tmp/wf-recording-rn
-    mkdir $folder 2> /dev/null
+    mkdir $folderpath
     wf-recorder --output LVDS-1 --file $filepath --geometry "$(slurp)"
     wl-copy < $filepath # This works, but for some reason discord can't paste in video files (it's a electron glitch on XWayland ig)
 fi

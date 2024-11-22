@@ -53,7 +53,10 @@ def check_tommorow_prayers(timings: List[str], current_time: datetime):
 
 def get_prayer(current_time: datetime):
     with open("/home/taham/.config/sway/data/prayer.csv", "r") as file:
-        timings = file.read().splitlines()
+        timings = []
+        while timings == []:
+            timings = file.read().splitlines()
+            time.sleep(1) 
 
         result = check_early_midnight(timings, current_time)
         if result is not None:

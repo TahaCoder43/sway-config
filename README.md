@@ -21,7 +21,6 @@
 - [] add KDE runner style runner, that has an option like KDE runner to run websites or query websites for example "{text} site:quran.com" or "quran.com/{surah}/{ayah}"
 - [] Set iosekya as the terminal font and cairo as the arabic font, and also check other arabic fonts
 - [] upload all the rest of your config files on github
-- [] add multiple notes using tmux
 - [] use window height and width from shell to set floating window size
 - [] add shadows -_-
 - [] add background blurrrrr ^<>^
@@ -44,6 +43,7 @@
 - [] Add logout option to danger mode
 - [] maybe add marks
 - [x] Monday Thursday fasting reminder and status shower
+- [x] add multiple notes using tmux
 - [x] in full screen mode, window should change upon moving focus
 - [x] add adhan givign feature
 - [x] copies screenrecording to clipboard 

@@ -6,3 +6,8 @@ if [[ -e /tmp/stopwatch-paused ]]; then
     sleep 1
     rm -rf /tmp/stopwatch-reset
 fi 
+
+if [[ -e /tmp/timer-done ]]; then
+    rm -rf /tmp/timer-done
+fi
+

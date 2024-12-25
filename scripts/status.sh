@@ -7,11 +7,66 @@ stopwatch_paused_indicator="󱫪"
 start_seconds=0
 saved_seconds=0
 
-space() {
+seconds_to_iso_time() {
+    if [[ -z $1 ]]; then
+        return 1
+    fi
+    total_seconds=$1
+
+    seconds=$(($total_seconds % 60))
+    minutes=$(($total_seconds / 60 % 60))
+    hours=$(($total_seconds / 3600))
+
+    { read hours; read minutes; read seconds; } < <(
+        echo $hours,$minutes,$seconds | awk '
+            BEGIN { RS=","; } $0 < 10 { print "0"$0 }
+            $0 > 9 { print $0 }
+        '
+    )
+
+    echo "$hours:$minutes:$seconds"
+}
+
+timer_done() {
+    if [[ ! -e  /tmp/timer-done ]]; then
+        return 0
+    fi
+    text=" 󱫐 TIMER DONE "
+
     echo "    {                                 "
-    echo "       \"full_text\": \" \",          "
-    echo "       \"min_width\": $1              "
+    echo "       \"full_text\": \"$text\",      "
+    echo "       \"color\": \"#222222\",        "
+    echo "       \"background\": \"#00ff00\"    "
     echo "    },                                "
+}
+
+timer() {
+    if [[ ! -e  /tmp/epoch_of_timer.txt ]]; then
+        return 0
+    fi
+    if [[ -e /tmp/timer-done ]]; then
+        return 0
+    fi
+
+    read epoch_time < /tmp/epoch_of_timer.txt
+    current_time=$(date +%s)
+    seconds_left=$(($epoch_time - $current_time))
+
+    if [[ $seconds_left -le 0 ]]; then
+        rm -rf /tmp/epoch_of_timer.txt
+        echo $epoch_time > /tmp/timer-done
+        return 0
+    fi
+
+    time=$(seconds_to_iso_time $seconds_left)
+    text=$time
+
+    echo "    {                                 "
+    echo "       \"full_text\": \" $text \",      "
+    echo "       \"color\": \"#ffcc88\"         "
+    echo "    },                                "
+
+
 }
 
 prayer() {
@@ -33,11 +88,7 @@ stopwatch() {
         now_seconds=$(date +%s)
         time_in_seconds=$(($now_seconds - $start_seconds + $saved_seconds))
 
-        seconds=$(($time_in_seconds % 60))
-        minutes=$(($time_in_seconds / 60 % 60))
-        hours=$(($time_in_seconds / 3600))
-
-        time="$hours:$minutes:$seconds"
+        time=$(seconds_to_iso_time $time_in_seconds)
         text=" $stopwatch_indicator $time "
 
         echo "    {                                 "
@@ -82,18 +133,22 @@ isRecording() {
 fastingStatus() {
     text=""
     if [[ -e /tmp/fast-tommorow ]]; then
-        text="Prepare for fast"
+        text="The Fast is tommorow"
+        color="#ffaa00"
     elif [[ -e /tmp/fast-today ]]; then
-        text="The Fast is about to begin"
+        text="The Fast is today"
+        color="#ff2222"
     elif [[ -e /tmp/fasting ]]; then
         text="Fasting right now"
+        color="#00ff75"
     else
         text="No fast"
+        color="#4422ff"
     fi
         
     echo "    {                                              "
     echo "       \"full_text\": \" $text \",                 "
-    echo "       \"color\": \"#ffaa00\"                      "
+    echo "       \"color\": \"$color\"                      "
     echo "    },                                             "
 }
 
@@ -104,11 +159,20 @@ formatDate() {
     echo "    }                            "
 }
 
+space() {
+    echo "    {                                 "
+    echo "       \"full_text\": \" \",          "
+    echo "       \"min_width\": $1              "
+    echo "    },                                "
+}
+
 echo '{"version": 1}\n'
 echo '['
 while true; do
     echo "["
     stopwatch
+    timer_done
+    timer
     isReconnecting
     isRecording
     fastingStatus

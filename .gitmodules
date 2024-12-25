@@ -1,0 +1,3 @@
+[submodule "scripts/timer-input"]
+	path = scripts/timer-input
+	url = git@github.com:TahaCoder43/timer-input

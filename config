@@ -232,10 +232,15 @@ bindsym $mod+Shift+d mode "⚠️danger"
 mode "󰥔 clock" {
     bindsym $mod+c mode "default"
 
-    bindsym Space exec /home/taham/.config/sway/scripts/toggle-stopwatch.sh
-    bindsym c exec /home/taham/.config/sway/scripts/clear-stopwatch.sh
+    bindsym Space exec /home/taham/.config/sway/scripts/toggle-stopwatch.sh 2> /tmp/sway-log/toggle-stopwatch.log
+    bindsym c exec /home/taham/.config/sway/scripts/clear-clock.sh 2> /tmp/sway-log/clear-clock.log
+    bindsym x exec rm -rf /tmp/epoch_of_timer.txt
+    bindsym t exec /home/taham/.config/sway/scripts/start-timer.sh 2> /tmp/sway-log/start-timer.log
+    bindsym l resize set 185px 55px
 
 }
+
+ for_window [title="timer-input.*"] floating enable, sticky enable
 
 bindsym $mod+c mode "󰥔 clock"
 

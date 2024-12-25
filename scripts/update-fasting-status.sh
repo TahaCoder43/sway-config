@@ -18,6 +18,7 @@ has_maghrib_passed() {
     maghrib_prayer_timing=$(awk 'NR==6' /home/taham/.config/sway/data/prayer.csv | while read time; do date -d "$time" +"%s"; done )
     current_time=$(date +%s)
 
+    echo "timings are $(($maghrib_prayer_timing <= $current_time))" > /tmp/some-log
     echo $(($maghrib_prayer_timing <= $current_time)) 
 }
 
@@ -26,7 +27,7 @@ if [[ $weekday -eq $monday || $weekday -eq $thursday ]]; then
 
     if [[ $(is_fajr_coming) -eq 1 ]]; then
         touch /tmp/fast-today
-    elif [[ ! $(has_maghrib_passed) ]]; then
+    elif [[ $(has_maghrib_passed) -eq 0 ]]; then
         touch /tmp/fasting
     fi
 elif [[ $weekday -eq $(($monday - 1)) || $weekday -eq $(($thursday - 1)) ]]; then

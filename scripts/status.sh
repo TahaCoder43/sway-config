@@ -58,8 +58,8 @@ timer() {
         return 0
     fi
 
-    time=$(seconds_to_iso_time $seconds_left)
-    text=$time
+    timer_time=$(seconds_to_iso_time $seconds_left)
+    text=$timer_time
 
     echo "    {                                 "
     echo "       \"full_text\": \" $text \",      "
@@ -88,8 +88,8 @@ stopwatch() {
         now_seconds=$(date +%s)
         time_in_seconds=$(($now_seconds - $start_seconds + $saved_seconds))
 
-        time=$(seconds_to_iso_time $time_in_seconds)
-        text=" $stopwatch_indicator $time "
+        stopwatch_time=$(seconds_to_iso_time $time_in_seconds)
+        text=" $stopwatch_indicator $stopwatch_time "
 
         echo "    {                                 "
         echo "       \"full_text\": \"$text\", "
@@ -100,7 +100,7 @@ stopwatch() {
     if [[ -e /tmp/stopwatch-paused ]]; then
         saved_seconds=$time_in_seconds
         start_seconds=0
-        text=" $stopwatch_paused_indicator $time "
+        text=" $stopwatch_paused_indicator $stopwatch_time "
         echo "    {                                 "
         echo "       \"full_text\": \"$text\", "
         echo "       \"color\": \"#66aaff\"         "

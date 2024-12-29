@@ -5,6 +5,7 @@
 # Read `man 5 sway` for a complete reference.
 
 exec_always mkdir /tmp/sway-log
+exec mkdir /home/taham/.config/sway/data
 
 ### Variables
 #
@@ -20,7 +21,7 @@ set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | wmenu | xargs swaymsg exec --
+set $menu /home/taham/.config/sway/scripts/menu.sh
 
 ### Output configuration
 # Example configuration:
@@ -187,6 +188,10 @@ include /etc/sway/config.d/*
 set $mod2 Mod1
 workspace number 4
 
+## Applications to run on startup
+
+exec aw-qt --no-gui
+
 ## Brightness Controls
 bindsym $mod+i exec /home/taham/.config/sway/scripts/increase_brightness.sh
 bindsym $mod+u exec /home/taham/.config/sway/scripts/decrease_brightness.sh
@@ -236,7 +241,6 @@ mode "󰥔 clock" {
     bindsym c exec /home/taham/.config/sway/scripts/clear-clock.sh 2> /tmp/sway-log/clear-clock.log
     bindsym x exec rm -rf /tmp/epoch_of_timer.txt
     bindsym t exec /home/taham/.config/sway/scripts/start-timer.sh 2> /tmp/sway-log/start-timer.log
-    bindsym l resize set 185px 55px
 
 }
 
@@ -247,10 +251,9 @@ bindsym $mod+c mode "󰥔 clock"
 mode "󱚾 network" {
     bindsym $mod+Shift+n mode "default"
 
-    bindsym r exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli reconnect
-    bindsym d exec cat /home/taham/.sudo-pass | sudo -S -p "" wpa_cli disconnect
-
-    bindsym s exec /home/taham/.config/sway/scripts/rc-service-networking-restart.sh 2> /tmp/sway-log/rc-service-networking-restart.log
+    bindsym c exec /home/taham/.config/sway/scripts/wifi-connect.sh
+    bindsym d exec /home/taham/.config/sway/scripts/connection-down.sh
+    bindsym u exec /home/taham/.config/sway/scripts/connection-up.sh
 }
 
 bindsym $mod+Shift+n mode "󱚾 network" 
@@ -278,58 +281,27 @@ client.unfocused $inactive-border $inactive-title #ffffff #484e50   $inactive-bo
 
 
 ## wallpaper 
-output * bg /home/taham/Pictures/Wallpaper/SnowycapsMilkyway.jpg fill
-
-## Controls mouse with keyboard
-
-# Diddn't work out
-# mode "mouse" {
-#     set $slow 5
-#     set $average 15
-#     set $fast 45
-#     set $speed $average
-#
-#     ## IMPORTANT! Keybinding to escape mousemode
-#     bindsym Escape mode "default"
-#
-#     ## Clicks
-#     bindsym u exec ydotool click 0x40
-#     bindsym --release u exec ydotool click 0x80
-#     bindsym i exec ydotool click 0x40
-#     bindsym --release i exec ydotool click 0x80
-#
-#     ## Speed modifiers
-#     bindsym s set $speed 5
-#     bindsym f set $speed 45
-#     bindsym a set $speed 15
-#
-#     ## Average speed movement
-#     bindsym h exec ydotool mousemove -x -$speed  -y 0 
-#     bindsym j exec ydotool mousemove -x 0 -y $speed 
-#     bindsym k exec ydotool mousemove -x 0 -y -$speed 
-#     bindsym l exec ydotool mousemove -x $speed -y 0 
-#     ## Diagnol movements
-#     bindsym n exec ydotool mousemove -x -$speed -y $speed 
-#     bindsym Period exec ydotool mousemove -x $speed -y $speed 
-#     bindsym y exec ydotool mousemove -x -$speed -y -$speed 
-#     bindsym o exec ydotool mousemove -x $speed -y -$speed 
-#
-#     ## Scrolling
-#     bindsym $mod+h exec ydotool mousemove --wheel -x 1 -y 0 
-#     bindsym $mod+j exec ydotool mousemove --wheel -x 0 -y -1
-#     bindsym $mod+k exec ydotool mousemove --wheel -x 0 -y 1
-#     bindsym $mod+l exec ydotool mousemove --wheel -x -1 -y 0 
-#    
-#
-# }
+output * bg /home/taham/.config/sway/background.jpeg fill
 
 mode " mouse" {
-    set $slow 5
-    set $average 15
-    set $fast 45
-
     ## IMPORTANT! Keybinding to escape mousemode
-    bindsym $mod+m mode "default"
+    ## Modifying repeat_delay back to what it was
+    bindsym $mod+m input 'type:keyboard' repeat_delay 300, mode "default"
+
+    set $min_slow 2
+    set $max_slow 10
+    set $slow_accelration 1
+   
+    set $min_average 5
+    set $max_average 30
+    set $average_accelration 4
+
+    set $min_fast 10
+    set $max_fast 60
+    set $fast_accelration 6
+
+    set $accelrate_script /home/taham/.config/sway/scripts/accelrate.sh
+    set $speed_path /home/taham/.config/sway/data/speed
 
     ## Clicks
     bindsym u exec ydotool click 0x40
@@ -340,60 +312,103 @@ mode " mouse" {
     bindsym --release m exec ydotool click 0x82
 
 
-    # This is neccesary or otherwise you can't shift click, cause on pressing shift you can't click
-    bindsym Shift+u exec ydotool click 0x40
+    # This is neccesary or otherwise you can't shift / ctrl click, cause on pressing shift you can't click
+    # I have not implemented (Alt is Mod1) Shift+Alt, Ctrl+Alt, Shift+Ctrl+Alt, you can implement them if you need them
+    bindsym Shift+u exec ydotool click 0x40 
     bindsym --release Shift+u exec ydotool click 0x80
-    bindsym Ctrl+u exec ydotool click 0x40
-    bindsym --release Ctrl+u exec ydotool click 0x80
     bindsym Shift+i exec ydotool click 0x41
     bindsym --release Shift+i exec ydotool click 0x81
-    bindsym Ctrl+i exec ydotool click 0x41
-    bindsym --release Ctrl+i exec ydotool click 0x81
     bindsym Shift+m exec ydotool click 0x42
     bindsym --release Shift+m exec ydotool click 0x82
+
+    bindsym Ctrl+u exec ydotool click 0x40
+    bindsym --release Ctrl+u exec ydotool click 0x80
+    bindsym Ctrl+i exec ydotool click 0x41
+    bindsym --release Ctrl+i exec ydotool click 0x81
     bindsym Ctrl+m exec ydotool click 0x42
     bindsym --release Ctrl+m exec ydotool click 0x82
 
+    bindsym Ctrl+Shift+u exec ydotool click 0x40
+    bindsym --release Ctrl+Shift+u exec ydotool click 0x80
+    bindsym Ctrl+Shift+i exec ydotool click 0x41
+    bindsym --release Ctrl+Shift+i exec ydotool click 0x81
+    bindsym Ctrl+Shift+m exec ydotool click 0x42
+    bindsym --release Ctrl+Shift+m exec ydotool click 0x82
+
+    # Mod1 is alt
+    bindsym Mod1+u exec ydotool click 0x40
+    bindsym --release Alt+u exec ydotool click 0x80
+    bindsym Mod1+i exec ydotool click 0x41
+    bindsym --release Alt+i exec ydotool click 0x81
+    bindsym Mod1+m exec ydotool click 0x42
+    bindsym --release Alt+m exec ydotool click 0x82
+
     ## Average speed movement
-    bindsym h exec ydotool mousemove -x -$average  -y 0 
-    bindsym j exec ydotool mousemove -x 0 -y $average 
-    bindsym k exec ydotool mousemove -x 0 -y -$average 
-    bindsym l exec ydotool mousemove -x $average -y 0 
+    # bindsym h exec ydotool mousemove -x -$average -y 0
+    bindsym h exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y 0"
+    bindsym --release h exec echo $min_average > $speed_path
+    bindsym j exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y $speed"
+    bindsym --release j exec echo $min_average > $speed_path
+    bindsym k exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y -$speed"
+    bindsym --release k exec echo $min_average > $speed_path
+    bindsym l exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y 0"
+    bindsym --release l exec echo $min_average > $speed_path
     ## Diagnol movements
-    bindsym n exec ydotool mousemove -x -$average -y $average 
-    bindsym Period exec ydotool mousemove -x $average -y $average 
-    bindsym y exec ydotool mousemove -x -$average -y -$average 
-    bindsym o exec ydotool mousemove -x $average -y -$average 
+    bindsym n exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y $speed"
+    bindsym --release n exec echo $min_average > $speed_path
+    bindsym Period exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y $speed"
+    bindsym --release Period exec echo $min_average > $speed_path
+    bindsym y exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y -$speed"
+    bindsym --release y exec echo $min_average > $speed_path
+    bindsym o exec "$accelrate_script $max_average $average_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y -$speed"
+    bindsym --release o exec echo $min_average > $speed_path
 
     ## Slow movements
-    bindsym Shift+h exec ydotool mousemove -x -$slow  -y 0 
-    bindsym Shift+j exec ydotool mousemove -x 0 -y $slow 
-    bindsym Shift+k exec ydotool mousemove -x 0 -y -$slow 
-    bindsym Shift+l exec ydotool mousemove -x $slow -y 0 
-    bindsym Shift+n exec ydotool mousemove -x -$slow -y $slow 
-    bindsym Shift+Period exec ydotool mousemove -x $slow -y $slow 
-    bindsym Shift+y exec ydotool mousemove -x -$slow -y -$slow 
-    bindsym Shift+o exec ydotool mousemove -x $slow -y -$slow 
+    bindsym Shift+h exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y 0"
+    bindsym --release Shift+h exec echo $min_slow > $speed_path
+    bindsym Shift+j exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y $speed"
+    bindsym --release Shift+j exec echo $min_slow > $speed_path
+    bindsym Shift+k exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y -$speed"
+    bindsym --release Shift+k exec echo $min_slow > $speed_path
+    bindsym Shift+l exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y 0"
+    bindsym --release Shift+l exec echo $min_slow > $speed_path
+    bindsym Shift+n exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y $speed"
+    bindsym --release Shift+n exec echo $min_slow > $speed_path
+    bindsym Shift+Period exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y $speed"
+    bindsym --release Shift+Period exec echo $min_slow > $speed_path
+    bindsym Shift+y exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y -$speed"
+    bindsym --release Shift+y exec echo $min_slow > $speed_path
+    bindsym Shift+o exec "$accelrate_script $max_slow $slow_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y -$speed"
+    bindsym --release Shift+o exec echo $min_slow > $speed_path
 
     ## Fast movements
-    bindsym Ctrl+h exec ydotool mousemove -x -$fast  -y 0 
-    bindsym Ctrl+j exec ydotool mousemove -x 0 -y $fast 
-    bindsym Ctrl+k exec ydotool mousemove -x 0 -y -$fast 
-    bindsym Ctrl+l exec ydotool mousemove -x $fast -y 0 
-    bindsym Ctrl+n exec ydotool mousemove -x -$fast -y $fast 
-    bindsym Ctrl+Period exec ydotool mousemove -x $fast -y $fast 
-    bindsym Ctrl+y exec ydotool mousemove -x -$fast -y -$fast 
-    bindsym Ctrl+o exec ydotool mousemove -x $fast -y -$fast 
+    bindsym Ctrl+h exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y 0"
+    bindsym --release Ctrl+h exec echo $min_fast > $speed_path
+    bindsym Ctrl+j exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y $speed"
+    bindsym --release Ctrl+j exec echo $min_fast > $speed_path
+    bindsym Ctrl+k exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x 0 -y -$speed"
+    bindsym --release Ctrl+k exec echo $min_fast > $speed_path
+    bindsym Ctrl+l exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y 0"
+    bindsym --release Ctrl+l exec echo $min_fast > $speed_path
+    bindsym Ctrl+n exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y $speed"
+    bindsym --release Ctrl+n exec echo $min_fast > $speed_path
+    bindsym Ctrl+Period exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y $speed"
+    bindsym --release Ctrl+Period exec echo $min_fast > $speed_path
+    bindsym Ctrl+y exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x -$speed  -y -$speed"
+    bindsym --release Ctrl+y exec echo $min_fast > $speed_path
+    bindsym Ctrl+o exec "$accelrate_script $max_fast $fast_accelration; read speed < $speed_path; ydotool mousemove -x $speed  -y -$speed"
+    bindsym --release Ctrl+o exec echo $min_fast > $speed_path
 
     ## Scrolling
     bindsym $mod+h exec ydotool mousemove --wheel -x 1 -y 0 
     bindsym $mod+j exec ydotool mousemove --wheel -x 0 -y -1
     bindsym $mod+k exec ydotool mousemove --wheel -x 0 -y 1
     bindsym $mod+l exec ydotool mousemove --wheel -x -1 -y 0 
-   
 
 }
-bindsym $mod+m mode " mouse"
+
+## repeat_delay of keys is modified cause you don't want delay in moving your mouse
+bindsym $mod+m input "type:keyboard" repeat_delay 50, mode " mouse"
 
 # Prayer scripts for bar
 exec_always /home/taham/.config/sway/scripts/update-prayer-data.sh 2> /tmp/sway-log/update-prayer-data.log &
@@ -438,11 +453,15 @@ exec swaync
 
 bindsym $mod+n exec swaync-client -t -sw
 
+# Keyboard Settings
+
+input "type:keyboard" repeat_delay 300
+
 # Keyboard layouts
 
-input "type:keyboard" {
-    xkb_layout us,ara-custom
-    xkb_options lv3:caps_switch,grp:rctrl_toggle
-}
+#input "type:keyboard" {
+#    xkb_layout us,ara-custom
+#    xkb_options lv3:caps_switch,grp:rctrl_toggle
+#}
 
 

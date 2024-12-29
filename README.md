@@ -1,3 +1,14 @@
+# Requirements
+
+1. Python & Bash for scripting
+2. ( Optional ) ydotool for keyboard homerow mouse control
+3. ( Optional ) wf-recorder & slurp for recording screen
+4. ( Optional ) grimshot for screenshot
+5. ( Optional ) dmenu as the menu
+6. ( Optional ) nmcli for network connections
+
+ <!-- 3. ( Very Optional ) godot executeable binary to run godot scripts for the timer GUI  -->
+
 # Setup
 
 1. Install sway (Check out there website, or your distros website on how to do it)

@@ -252,6 +252,7 @@ mode "󱚾 network" {
     bindsym $mod+Shift+n mode "default"
 
     bindsym c exec /home/taham/.config/sway/scripts/wifi-connect.sh
+    bindsym r exec /home/taham/.config/sway/scripts/wifi-rescan-connect.sh
     bindsym d exec /home/taham/.config/sway/scripts/connection-down.sh
     bindsym u exec /home/taham/.config/sway/scripts/connection-up.sh
 }

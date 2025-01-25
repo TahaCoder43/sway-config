@@ -6,6 +6,7 @@
 4. ( Optional ) flameshot for screenshot
 5. ( Optional ) dmenu as the menu
 6. ( Optional ) nmcli for network connections
+7. ( Optional ) Activitty watch for time monitoring
 
  <!-- 3. ( Very Optional ) godot executeable binary to run godot scripts for the timer GUI  -->
 

@@ -454,15 +454,12 @@ exec swaync
 
 bindsym $mod+n exec swaync-client -t -sw
 
-# Keyboard Settings
+# Keyboard settings
 
-input "type:keyboard" repeat_delay 300
-
-# Keyboard layouts
-
-#input "type:keyboard" {
-#    xkb_layout us,ara-custom
-#    xkb_options lv3:caps_switch,grp:rctrl_toggle
-#}
+input "type:keyboard" {
+    repeat_delay 300
+    xkb_layout us,ara-ph
+    xkb_options lv3:caps_switch,grp:rctrl_toggle,keypad:pointerkeys
+}
 
 
